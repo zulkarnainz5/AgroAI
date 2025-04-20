@@ -325,7 +325,6 @@ elif prblm == "Smart Irrigation":
 # with tab3:
     le_crop = joblib.load("le_crop.pkl")
     le_state = joblib.load("le_state.pkl")
-    # xgb_model = joblib.load("xgbmodel.pkl")
     rf_model = joblib.load("rf_model.pkl")
 
     st.subheader("Smart Irrigation")
