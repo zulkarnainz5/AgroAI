@@ -325,8 +325,8 @@ elif prblm == "Smart Irrigation":
 # with tab3:
     le_crop = joblib.load("le_crop.pkl")
     le_state = joblib.load("le_state.pkl")
-    xgb_model = joblib.load("xgboost_irrigation_model.pkl")
-    rf_model = joblib.load("random_forest_irrigation_model.pkl")
+    xgb_model = joblib.load("xgbmodel.pkl")
+    rf_model = joblib.load("rftmodel.pkl")
 
     st.subheader("Smart Irrigation")
     irrModel = st.sidebar.selectbox("Select The Model", ("Random Forest", "XGBoost"))
