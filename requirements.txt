@@ -4,3 +4,9 @@ pandas
 numpy
 matplotlib
 scikit-learn
+torch
+torchmetrics
+torchvision
+pytorch_lightning
+pickle
+pillow
