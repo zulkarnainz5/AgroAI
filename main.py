@@ -174,8 +174,7 @@ elif prblm == "Crop Health Monitoring":
 
 # with tab2:
     st.subheader("Crop Health Monitoring")
-    st.write("Under Construction")
-
+    
     class FineTuneModel(pl.LightningModule):
         def __init__(self, num_classes=18, model_version="googlenet", denselayer_size=128, dropout=0.5, l_rate=0.0005):
             super(FineTuneModel, self).__init__()
@@ -313,7 +312,7 @@ elif prblm == "Crop Health Monitoring":
         predicted_class_name = class_names[predicted_class_idx]
         if "healthy" in predicted_class_name.lower():
             st.success(f"✅ The crop appears to be healthy: **{predicted_class_name.replace('_', ' ').title()}**.")
-            st.balloons()
+            # st.balloons()
             st.info("No disease symptoms detected. Continue regular monitoring and care.")
         else:
             st.error(f"⚠️ Disease Detected: **{predicted_class_name.replace('_', ' ').title()}**")
