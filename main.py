@@ -174,7 +174,7 @@ elif prblm == "Crop Health Monitoring":
 
 # with tab2:
     st.subheader("Crop Health Monitoring")
-    st.write("Under Construction")
+    
 
     class FineTuneModel(pl.LightningModule):
         def __init__(self, num_classes=18, model_version="googlenet", denselayer_size=128, dropout=0.5, l_rate=0.0005):
@@ -313,7 +313,7 @@ elif prblm == "Crop Health Monitoring":
         predicted_class_name = class_names[predicted_class_idx]
         if "healthy" in predicted_class_name.lower():
             st.success(f"✅ The crop appears to be healthy: **{predicted_class_name.replace('_', ' ').title()}**.")
-            st.balloons()
+            # st.balloons()
             st.info("No disease symptoms detected. Continue regular monitoring and care.")
         else:
             st.error(f"⚠️ Disease Detected: **{predicted_class_name.replace('_', ' ').title()}**")
@@ -325,47 +325,47 @@ elif prblm == "Smart Irrigation":
 # with tab3:
     le_crop = joblib.load("le_crop.pkl")
     le_state = joblib.load("le_state.pkl")
-    xgb_model = joblib.load("xgbmodel.pkl")
-    rf_model = joblib.load("rftmodel.pkl")
+    # xgb_model = joblib.load("xgbmodel.pkl")
+    rf_model = joblib.load("rf_model.pkl")
 
     st.subheader("Smart Irrigation")
-    irrModel = st.sidebar.selectbox("Select The Model", ("Random Forest", "XGBoost"))
+    irrModel = st.sidebar.selectbox("Select The Model", ("Random Forest"))
 
     
     # First row: N, P, K horizontally
     cl1, cl2, cl3 = st.columns(3)
     with cl1:
-        Soil_Moisture = st.text_input("Soil Moisture", "90")
+        Soil_Moisture = st.text_input("Soil Moisture", "0.0629")
     with cl2:
-        Tmax_value = st.text_input("Tmax_value", "35")
+        Tmax_value = st.text_input("Tmax_value", "39.29")
     with cl3:
-        Tmin_value = st.text_input("Tmin_value", "25")
+        Tmin_value = st.text_input("Tmin_value", "23.033")
 
     # Second row: Temp & Humidity horizontally
     cl4, cl5, cl6 = st.columns(3)
     with cl4:
-        Rainfall_value = st.text_input("Rainfall_value", "215.9")
+        Rainfall_value = st.text_input("Rainfall_value", "6.89")
     with cl5:
-        Rainfall_in_last_4_months = st.text_input("Rainfall_in_last_4_months", "212.0")
+        Rainfall_last_7_days = st.text_input("Rainfall_last_7_days", "10.38")
     with cl6:
-        Month = st.text_input("Month", "05")
+        Month = st.text_input("Month", "04")
 
     # Third row: pH and Rainfall horizontally
     cl7, cl8 = st.columns(2)
     with cl7:
         State = st.selectbox("State",
-                             ('Andaman & Nicobar', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar',
+                             ('Rajasthan','Andaman & Nicobar', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar',
                                 'Chandigarh', 'Chhattishgarh', 'Daman and Diu and Dadra and Nagar Haveli',
                                 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir',
                                 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Lakshadweep', 'Madhya Pradesh',
                                 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha',
-                                'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamilnadu', 'Telengana',
+                                'Puducherry', 'Punjab', 'Sikkim', 'Tamilnadu', 'Telengana',
                                 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
                                 ))
 
     with cl8:
         Crop = st.selectbox("Crop",
-                             ('Wheat', 'Rice', 'Potato', 'Tomato'))
+                             ( 'Tomato','Wheat', 'Rice', 'Potato'))
 
     
     State_Code = le_state.transform([State])
@@ -373,14 +373,15 @@ elif prblm == "Smart Irrigation":
 
 
 
-    data3 = [[Soil_Moisture, Tmax_value, Tmin_value, Rainfall_value, Rainfall_in_last_4_months, Month, State_Code, Crop_Code]]
+    data3 = [[Soil_Moisture, Tmax_value, Tmin_value, Rainfall_value, Rainfall_last_7_days, Month, State_Code, Crop_Code]]
     X3 = pd.DataFrame(data3, columns=['Rainfall_value', 'Tmax_value', 'Tmin_value', 'Soil Moisture',
-            'rainfall_in_last_4_months', 'Month', 'State_Code', 'Crop_Code'])
+            'Rainfall_last_7_days', 'Month', 'State_Code', 'Crop_Code'])
     
-    if irrModel == "Random Forest":
-        output = rf_model.predict(X3)
-    elif irrModel == "XGBoost":
-        output = xgb_model.predict(X3)
+    # if irrModel == "Random Forest":
+    #     output = rf_model.predict(X3)
+    # elif irrModel == "XGBoost":
+    #     output = xgb_model.predict(X3)
+    output = rf_model.predict(X3)
 
         
     if st.button("Submit", type="primary"):
