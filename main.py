@@ -269,55 +269,57 @@ elif prblm == "Crop Health Monitoring":
     
     uploaded_file = st.file_uploader("Choose a image")
 
+    if uploaded_file:
+        # Load the image you want to predict
+        img_path = uploaded_file
+        img = Image.open(img_path).convert("RGB")
+        st.image(img_path)
 
-    # Load the image you want to predict
-    img_path = uploaded_file
-    img = Image.open(img_path).convert("RGB")
+        # Apply the same transformation used in your DataModule
+        transform = transforms.Compose([
+            transforms.Resize((256, 256)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
 
-    # Apply the same transformation used in your DataModule
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
+        img_tensor = transform(img).unsqueeze(0)  # Add batch dimension
 
-    img_tensor = transform(img).unsqueeze(0)  # Add batch dimension
+        # Get prediction
+        with torch.no_grad():
+            output = model(img_tensor)  # Make prediction
+            predicted_class_idx = output.argmax(dim=1).item()  # Get the predicted class index
 
-    # Get prediction
-    with torch.no_grad():
-        output = model(img_tensor)  # Make prediction
-        predicted_class_idx = output.argmax(dim=1).item()  # Get the predicted class index
+        # Get class names from the DataModule
+        class_names = ['Bacterialblight rice',
+        'BlackPoint wheat',
+        'Brownspot rice',
+        'FusariumFootRot wheat',
+        'HealthyLeaf wheat',
+        'Iris yellow virus_onion',
+        'LeafBlight wheat',
+        'Leafsmut rice',
+        'Potato___Early_blight',
+        'Potato___Late_blight',
+        'Potato___healthy',
+        'Stemphylium leaf blight and collectrichum leaf blight onion',
+        'Tomato___Early_blight',
+        'Tomato___Late_blight',
+        'Tomato___healthy',
+        'WheatBlast',
+        'healthy_onion',
+        'purple blotch onion']  # Replace with actual class names
 
-    # Get class names from the DataModule
-    class_names = ['Bacterialblight rice',
-    'BlackPoint wheat',
-    'Brownspot rice',
-    'FusariumFootRot wheat',
-    'HealthyLeaf wheat',
-    'Iris yellow virus_onion',
-    'LeafBlight wheat',
-    'Leafsmut rice',
-    'Potato___Early_blight',
-    'Potato___Late_blight',
-    'Potato___healthy',
-    'Stemphylium leaf blight and collectrichum leaf blight onion',
-    'Tomato___Early_blight',
-    'Tomato___Late_blight',
-    'Tomato___healthy',
-    'WheatBlast',
-    'healthy_onion',
-    'purple blotch onion']  # Replace with actual class names
-
-    # Map to class label
-    predicted_class_name = class_names[predicted_class_idx]
-    if "healthy" in predicted_class_name.lower():
-        st.success(f"✅ The crop appears to be healthy: **{predicted_class_name.replace('_', ' ').title()}**.")
-        st.balloons()
-        st.info("No disease symptoms detected. Continue regular monitoring and care.")
+        # Map to class label
+        predicted_class_name = class_names[predicted_class_idx]
+        if "healthy" in predicted_class_name.lower():
+            st.success(f"✅ The crop appears to be healthy: **{predicted_class_name.replace('_', ' ').title()}**.")
+            st.balloons()
+            st.info("No disease symptoms detected. Continue regular monitoring and care.")
+        else:
+            st.error(f"⚠️ Disease Detected: **{predicted_class_name.replace('_', ' ').title()}**")
+            st.warning("It's recommended to take appropriate preventive or remedial actions. Consider consulting an agricultural expert.")
     else:
-        st.error(f"⚠️ Disease Detected: **{predicted_class_name.replace('_', ' ').title()}**")
-        st.warning("It's recommended to take appropriate preventive or remedial actions. Consider consulting an agricultural expert.")
-
+        st.write("Please upload a picture of crop")
 ## 3. Smart Irrigation
 elif prblm == "Smart Irrigation":
 # with tab3:
