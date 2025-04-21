@@ -381,7 +381,7 @@ elif prblm == "Smart Irrigation":
         output = rf_model.predict(X3)
     elif irrModel == "XGBoost":
         output = xgb_model.predict(X3)
-    # output = rf_model.predict(X3)
+
 
         
     if st.button("Submit", type="primary"):
