@@ -9,3 +9,4 @@ torchmetrics
 torchvision
 pytorch_lightning
 pillow
+xgboost
