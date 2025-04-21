@@ -325,10 +325,11 @@ elif prblm == "Smart Irrigation":
 # with tab3:
     le_crop = joblib.load("le_crop.pkl")
     le_state = joblib.load("le_state.pkl")
-    rf_model = joblib.load("rf_model.pkl")
+    xgb_model = joblib.load("xgboost_irrigation_model.pkl")
+    rf_model = joblib.load("random_forest_irrigation_model.pkl")
 
     st.subheader("Smart Irrigation")
-    irrModel = st.sidebar.selectbox("Select The Model", ("Random Forest"))
+    irrModel = st.sidebar.selectbox("Select The Model", ("Random Forest", "XGBoost"))
 
     
     # First row: N, P, K horizontally
@@ -345,7 +346,7 @@ elif prblm == "Smart Irrigation":
     with cl4:
         Rainfall_value = st.text_input("Rainfall_value", "6.89")
     with cl5:
-        Rainfall_last_7_days = st.text_input("Rainfall_last_7_days", "10.38")
+        Rainfall_in_last_4_months = st.text_input("Rainfall_in_last_4_months", "10.38")
     with cl6:
         Month = st.text_input("Month", "04")
 
@@ -372,15 +373,15 @@ elif prblm == "Smart Irrigation":
 
 
 
-    data3 = [[Soil_Moisture, Tmax_value, Tmin_value, Rainfall_value, Rainfall_last_7_days, Month, State_Code, Crop_Code]]
+    data3 = [[Soil_Moisture, Tmax_value, Tmin_value, Rainfall_value, Rainfall_in_last_4_months, Month, State_Code, Crop_Code]]
     X3 = pd.DataFrame(data3, columns=['Rainfall_value', 'Tmax_value', 'Tmin_value', 'Soil Moisture',
-            'Rainfall_last_7_days', 'Month', 'State_Code', 'Crop_Code'])
+            'rainfall_in_last_4_months', 'Month', 'State_Code', 'Crop_Code'])
     
-    # if irrModel == "Random Forest":
-    #     output = rf_model.predict(X3)
-    # elif irrModel == "XGBoost":
-    #     output = xgb_model.predict(X3)
-    output = rf_model.predict(X3)
+    if irrModel == "Random Forest":
+        output = rf_model.predict(X3)
+    elif irrModel == "XGBoost":
+        output = xgb_model.predict(X3)
+    # output = rf_model.predict(X3)
 
         
     if st.button("Submit", type="primary"):
