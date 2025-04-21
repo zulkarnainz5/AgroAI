@@ -380,10 +380,18 @@ elif prblm == "Smart Irrigation":
     if irrModel == "Random Forest":
         output = rf_model.predict(X3)
     elif irrModel == "XGBoost":
+        X3["Rainfall_value"] = pd.to_numeric(X3["Rainfall_value"], errors="coerce")
+        X3["Tmax_value"] = pd.to_numeric(X3["Tmax_value"], errors="coerce")
+        X3["Tmin_value"] = pd.to_numeric(X3["Tmin_value"], errors="coerce")
+        X3["Soil Moisture"] = pd.to_numeric(X3["Soil Moisture"], errors="coerce")
+        X3["rainfall_in_last_4_months"] = pd.to_numeric(X3["rainfall_in_last_4_months"], errors="coerce")
+        X3["Month"] = pd.to_numeric(X3["Month"], errors="coerce")
+        X3["State_Code"] = pd.to_numeric(X3["State_Code"], errors="coerce")
+        X3["Crop_Code"] = pd.to_numeric(X3["Crop_Code"], errors="coerce")
         output = xgb_model.predict(X3)
+    # output = rf_model.predict(X3)
 
-
-        
+    
     if st.button("Submit", type="primary"):
         if output == [1]:
             st.success("✅ Conditions are suitable for irrigation.")
